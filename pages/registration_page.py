@@ -1,5 +1,7 @@
-import os
-from selene import browser, have
+from pathlib import Path
+
+from selene import browser, have, command
+
 
 class RegistrationPage:
     def open(self):
@@ -29,12 +31,16 @@ class RegistrationPage:
     def type_subjects(self, value):
         browser.element('#subjectsInput').type(value).press_enter()
 
+    def scroll_down(self):
+        browser.element('#subjectsInput').perform(command.js.scroll_into_view)
+
     def select_hobbies(self):
         browser.element('[for="hobbies-checkbox-1"]').click()
         browser.element('[for="hobbies-checkbox-3"]').click()
 
     def upload_picture(self):
-        browser.element('#uploadPicture').send_keys(os.path.abspath('resources/image.jpeg'))
+        browser.element('[type="file"]').send_keys(str(Path(__file__).parent.parent.joinpath(
+            f'resources/image.jpeg')))
 
     def type_current_address(self, address):
         browser.element('#currentAddress').type(address)
