@@ -1,11 +1,12 @@
+from pathlib import Path
 
-import os
-from selene import browser, have
+from selene import browser, have, command
 from user_data.user_data import user
+
 
 class RegistrationPage:
     def open(self):
-        browser.open('/automation-practice-form')
+        browser.open('automation-practice-form')
 
     def type_first_name(self, first_name):
         browser.element('#firstName').type(first_name)
@@ -31,12 +32,16 @@ class RegistrationPage:
     def type_subjects(self, value):
         browser.element('#subjectsInput').type(value).press_enter()
 
+    def scroll_down(self):
+        browser.element('#subjectsInput').perform(command.js.scroll_into_view)
+
     def select_hobbies(self):
         browser.element('[for="hobbies-checkbox-1"]').click()
         browser.element('[for="hobbies-checkbox-3"]').click()
 
     def upload_picture(self):
-        browser.element('#uploadPicture').send_keys(os.path.abspath('resources/test_file.jpeg'))
+        browser.element('[type="file"]').send_keys(str(Path(__file__).parent.parent.joinpath(
+            f'resources/test_file.jpeg')))
 
     def type_current_address(self, address):
         browser.element('#currentAddress').type(address)
@@ -55,8 +60,11 @@ class RegistrationPage:
         self.type_first_name(user.first_name)
         self.type_last_name(user.last_name)
         self.type_email(user.email)
+        self.choose_gander()
+        self.type_phone_number(user.phone_number)
         self.type_birth_date(user.year_of_birth, user.month_of_birth, user.day_of_birth)
         self.type_subjects(user.subjects)
+        self.scroll_down()
         self.select_hobbies()
         self.upload_picture()
         self.type_current_address(user.address)
@@ -64,19 +72,15 @@ class RegistrationPage:
         self.type_city(user.city)
         self.click_submit_button()
 
-
-
-    def assert_user_data_form(self, user):
+    def assert_user_data_form(self):
         browser.element('.table').all('td').even.should(have.exact_texts(
-            f'{user.first_name}{user.last_name}',
+            f'{user.first_name} {user.last_name}',
             f'{user.email}',
             f'{user.gender}',
             f'{user.phone_number}',
-            f'{user.day_of_birth}{user.month_of_birth}{user.year_of_birth}',
+            f'{user.day_of_birth} {user.month_of_birth},{user.year_of_birth}',
             f'{user.subjects}',
             f'{user.hobbies}',
             f'{user.picture}',
             f'{user.address}',
-            f'{user.state}{user.city}'))
-
-
+            f'{user.state} {user.city}'))

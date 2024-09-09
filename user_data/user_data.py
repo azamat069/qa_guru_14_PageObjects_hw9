@@ -12,7 +12,7 @@ class User:
     month_of_birth: str
     year_of_birth: str
     subjects: str
-    hobby: str
+    hobbies: str
     picture: str
     address: str
     state: str
@@ -28,9 +28,9 @@ user = User(first_name='Azamat',
             month_of_birth='April',
             year_of_birth='1999',
             subjects='Computer Science',
-            hobby='Sports, Music',
+            hobbies='Sports, Music',
             picture='test_file.jpeg',
-            address='Moscow\nLenina 124 street',
+            address='Moscow Lenina 124 street',
             state='Haryana',
             city='Karnal'
             )
